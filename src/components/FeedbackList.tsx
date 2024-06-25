@@ -1,22 +1,38 @@
-import { TriangleUpIcon } from '@radix-ui/react-icons'
+import { useEffect, useState } from "react";
+import FeedbackItem from "./FeedbackItem";
+import Spinner from "./Spinner";
+import ErrorMessage from "./ErrorMessage";
 
 export default function FeedbackList() {
+  const [feedbackItems, setFeedbackItems] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      try {
+        const res = await fetch('https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks')
+        if(!res.ok) {
+          throw new Error()
+        }
+        const data = await res.json()
+        setFeedbackItems(data.feedbacks)
+      } catch(error) {
+        setError('Something went wrong. Please try again later.')
+      }
+      setIsLoading(false)
+    }
+    fetchData()
+  }, [])
+
   return (
     <ol className="feedback-list">
-      <li className="feedback">
-        <button>
-          <TriangleUpIcon />
-          <span>593</span>
-        </button>
-        <div>
-          <p>A</p>
-        </div>
-        <div>
-          <p>Amazon</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur totam quisquam odio, ullam asperiores enim.</p>
-        </div>
-        <p>4d</p>
-      </li>
+      {isLoading && <Spinner />}
+      {error && <ErrorMessage />}
+      {feedbackItems.map(item => (
+        <FeedbackItem key={item.id} item={item} />
+      ))}
     </ol>
   )
 }
