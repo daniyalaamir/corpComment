@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
-import Container from "./components/Container"
-import Footer from "./components/Footer"
+import Footer from "./components/layout/Footer"
+import Container from "./components/layout/Container"
 import HashtagList from "./components/HashtagList"
 import { TFeedbackItem } from "./lib/types"
 
