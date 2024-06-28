@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react"
 import Footer from "./components/layout/Footer"
 import Container from "./components/layout/Container"
-import HashtagList from "./components/HashtagList"
+import HashtagList from "./components/hashtag/HashtagList"
 import { TFeedbackItem } from "./lib/types"
 
 function App() {
   const [feedbackItems, setFeedbackItems] = useState<TFeedbackItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+
+  const companyList = feedbackItems
+    .map(item => item.company)
+      .filter((company, index, array) => {
+        return array.indexOf(company) === index
+      })
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +65,7 @@ function App() {
         error={error}
         handleAddToList={handleAddToList}
       />
-      <HashtagList />
+      <HashtagList companyList={companyList} />
     </div>
   )
 }
